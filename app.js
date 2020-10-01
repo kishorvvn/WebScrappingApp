@@ -10,6 +10,10 @@ const webScrapes = require('./webscrapping.js');
 
 
 var app = express();
+
+app.use('/public', express.static(path.join(__dirname + 'public')));
+
+
 /**
  * set up routes
  * */
@@ -23,41 +27,75 @@ router.get('/submit-with-get', function async(req, res) {
   // set up variables to store url from user and filepath to store scrapped files
   var url = req.query.url;
   if (url == '') {
-    res.send('Please provide a valid url')
-
+    res.send('Please provide a valid url');
   } else {
 
-    var dir_name = '/' + new Date().getMinutes();
+    var dir_name = '/' + new Date().getDay();
     var directory = path.join(__dirname + '/public') + dir_name;
 
     // call scrape function
-    webScrapes.scrapeWeb(url, directory)
-      .then(() => {
-        // res.send('scrapping sucessful')
-        // initialize adm-zip module
-        var zip = new admZIp();
-        // declate output path for file to store
-        var outputFIlePath = directory + 'output.zip';
+    webScrapes.scrapeWeb(url, directory).then(() => {
+      var zip = new admZIp();
+      // declate output path for file to store
+      var outputFIlePath = directory + 'output.zip';
 
-        // add folder to zip it up
-        zip.addLocalFolder(directory);
-        // write files to the path
-        fs.writeFileSync(outputFIlePath, zip.toBuffer());
-        // send it to the client and download
+      // add folder to zip it up
+      zip.addLocalFolder(directory);
+      // write files to the path
+      fs.writeFileSync(outputFIlePath, zip.toBuffer());
+      // send it to the client and download
+      res.sendFile(path.join(__dirname + '/download.html'));
+    })
+    // .then(() => {
+    //   // res.send('scrapping sucessful')
+    //   // initialize adm-zip module
+    //   var zip = new admZIp();
+    //   // declate output path for file to store
+    //   var outputFIlePath = directory + 'output.zip';
 
-        res.sendFile(outputFIlePath, 'scrapped_web_files.zip', (err) => {
+    //   // add folder to zip it up
+    //   zip.addLocalFolder(directory);
+    //   // write files to the path
+    //   fs.writeFileSync(outputFIlePath, zip.toBuffer());
+    //   // send it to the client and download
 
-          if (err) {
-            console.log(err);
-          }
-          // remove folder
-          // fs.rmdirSync(directory);
-          // remove zip file
-          // fs.unlinkSync(path.resolve(outputFIlePath));
-        });
+    //   res.sendFile(outputFIlePath, 'scrapped_web_files.zip', (err) => {
 
-      });
+    //     if (err) {
+    //       console.log(err);
+    //     }
+    //     // remove folder
+    //     fs.rmdirSync(directory);
+    //     // remove zip file
+    //     fs.unlinkSync(path.resolve(outputFIlePath));
+    //   });
+
+    // });
   }
+
+  router.get('/download', function async(req, res) {
+    var dir_name = '/' + new Date().getDay();
+    var directory = path.join(__dirname + '/public') + dir_name;
+    var outputFIlePath = directory + 'output.zip';
+
+    // // add folder to zip it up
+    // zip.addLocalFolder(directory);
+    // // write files to the path
+    // fs.writeFileSync(outputFIlePath, zip.toBuffer());
+    // // send it to the client and download
+
+    res.sendFile(outputFIlePath, 'scrapped_web_files.zip', (err) => {
+
+      if (err) {
+        console.log(err);
+      }
+      // remove folder
+      fs.rmdirSync(directory);
+      // remove zip file
+      fs.unlinkSync(path.resolve(outputFIlePath));
+    });
+
+  })
 
 
   // scrape({

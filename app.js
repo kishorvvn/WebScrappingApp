@@ -43,49 +43,21 @@ router.get('/submit-with-get', function async(req, res) {
       zip.addLocalFolder(directory);
       // write files to the path
       fs.writeFileSync(outputFIlePath, zip.toBuffer());
-      // send it to the client and download
+      // send it to the new page with download link
       res.sendFile(path.join(__dirname + '/download.html'));
     })
-    // .then(() => {
-    //   // res.send('scrapping sucessful')
-    //   // initialize adm-zip module
-    //   var zip = new admZIp();
-    //   // declate output path for file to store
-    //   var outputFIlePath = directory + 'output.zip';
 
-    //   // add folder to zip it up
-    //   zip.addLocalFolder(directory);
-    //   // write files to the path
-    //   fs.writeFileSync(outputFIlePath, zip.toBuffer());
-    //   // send it to the client and download
-
-    //   res.sendFile(outputFIlePath, 'scrapped_web_files.zip', (err) => {
-
-    //     if (err) {
-    //       console.log(err);
-    //     }
-    //     // remove folder
-    //     fs.rmdirSync(directory);
-    //     // remove zip file
-    //     fs.unlinkSync(path.resolve(outputFIlePath));
-    //   });
-
-    // });
   }
 
+  // set up route for new page with download link
   router.get('/download', function async(req, res) {
+    // diclare path variables to locate the file
     var dir_name = '/' + new Date().getDay();
     var directory = path.join(__dirname + '/public') + dir_name;
     var outputFIlePath = directory + 'output.zip';
 
-    // // add folder to zip it up
-    // zip.addLocalFolder(directory);
-    // // write files to the path
-    // fs.writeFileSync(outputFIlePath, zip.toBuffer());
-    // // send it to the client and download
-
+    // send a file to download
     res.sendFile(outputFIlePath, 'scrapped_web_files.zip', (err) => {
-
       if (err) {
         console.log(err);
       }
@@ -96,57 +68,11 @@ router.get('/submit-with-get', function async(req, res) {
     });
 
   })
-
-
-  // scrape({
-  //   urls: [url],
-  //   directory: __dirname + dir_name,
-  //   plugins: [
-  //     new PuppeteerPlugin({
-  //       launchOptions: { headless: false }, /* optional */
-  //       scrollToBottom: { timeout: 10000, viewportN: 10 }, /* optional */
-  //       blockNavigation: true, /* optional */
-  //     })
-  //   ]
-  // })
-  //   .then(() => {
-  //     // res.send('scrapping sucessful')
-  //     // initialize adm-zip module
-  //     var zip = new admZIp();
-  //     // declate output path for file to store
-  //     var outputFIlePath = new Date().getMinutes() + 'output.zip';
-  //     // add folder
-  //     zip.addLocalFolder(__dirname + dir_name);
-  //     // write files to the path
-  //     fs.writeFileSync(outputFIlePath, zip.toBuffer());
-  //     // send it to the client and download
-  //     res.download(outputFIlePath);
-  //   });
-
-
 });
-
-
-
-
-
-
-
-// fs.readFile('./index.html', function read(err, data) {
-//   if (err) {
-//     console.log('File can not be read' + err);
-//   }
-
-//   content = data;
-// })
-
-
-// app.get("/home", function (req, res) {
-//   res.send(content);
-// })
 
 //add the router
 app.use('/', router);
 
+// set up port to listen
 const port = 3000
-app.listen(3000, () => console.log(`App listening on port ${port}`))
+app.listen(3000, () => console.log(`App listening on port ${port}`));

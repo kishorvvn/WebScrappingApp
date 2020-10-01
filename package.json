@@ -1,0 +1,24 @@
+{
+  "name": "webScrappingApp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.4.16",
+    "ajax": "0.0.4",
+    "express": "^4.17.1",
+    "express-zip": "^3.0.0",
+    "file-system": "^2.2.2",
+    "jszip": "^3.5.0",
+    "path": "^0.12.7",
+    "puppeteer": "^5.3.1",
+    "website-scraper": "^4.2.3",
+    "website-scraper-puppeteer": "^0.1.5"
+  }
+}
